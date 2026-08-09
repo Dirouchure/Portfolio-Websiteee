@@ -1,0 +1,249 @@
+HOW TO CHECK ALL CONNECTIONS
+
+=== QUICK TEST - Use Batch File ===
+
+1. Double-click: CHECK_CONNECTIONS.bat
+
+This will automatically check:
+- Node.js installed
+- MySQL running
+- Database connection
+- Frontend configuration
+
+=== MANUAL TEST ===
+
+TEST 1: Check MySQL is Running
+1. Open XAMPP Control Panel
+2. MySQL should show "Running" (green)
+3. If not, click "Start"
+
+TEST 2: Check Database Exists
+1. Open: http://localhost/phpmyadmin
+2. Look for "portfolio_db" in left sidebar
+3. Click on it
+4. Should see 8 tables: admin, profile, skills, etc.
+
+TEST 3: Test Backend Database Connection
+1. Open Command Prompt
+2. Run:
+   cd C:\Users\hp\Desktop\portfolio-website\backend
+   node test_connection.js
+
+You should see:
+✓ Database connection successful!
+✓ Found 8 tables
+✓ Admin account found
+✓ Profile found
+
+If you see errors:
+- MySQL not running → Start in XAMPP
+- Database not found → Import portfolio_db.sql
+- Wrong credentials → Check backend/.env
+
+TEST 4: Test Backend Server
+1. Start backend:
+   cd backend
+   npm start
+
+2. Should see: "Server running on port 5000"
+3. No error messages
+
+TEST 5: Test Backend API
+1. Open browser
+2. Go to: http://localhost:5000/api/profile
+
+Should see JSON data:
+{
+  "id": 1,
+  "full_name": "Your Name",
+  "title": "Full Stack Developer",
+  ...
+}
+
+If you see:
+- "Cannot GET" → Backend not running
+- Error message → Check backend terminal
+- Nothing loads → Check URL is correct
+
+TEST 6: Test Frontend Configuration
+1. Open file: frontend/src/config/api.js
+2. Should see: const API_URL = 'http://localhost:5000/api';
+3. If different, change it
+
+TEST 7: Test Frontend Connection
+1. Start frontend:
+   cd frontend
+   npm start
+
+2. Browser opens at: http://localhost:3000
+3. Open browser console (F12)
+4. Go to: http://localhost:3000/admin/login
+5. Check console for errors
+
+If you see:
+- "Network Error" → Backend not running
+- "ERR_CONNECTION_REFUSED" → Backend not started
+- No errors → Connection working!
+
+TEST 8: Test Complete Flow
+1. XAMPP MySQL: Running ✓
+2. Backend terminal: "Server running on port 5000" ✓
+3. Frontend loads: http://localhost:3000 ✓
+4. Can login: admin / admin123 ✓
+
+=== VISUAL CONNECTION MAP ===
+
+Frontend (Port 3000)
+    ↓
+    | HTTP Requests
+    ↓
+Backend (Port 5000)
+    ↓
+    | MySQL Queries
+    ↓
+Database (Port 3306)
+    ↓
+XAMPP MySQL
+
+=== CHECK EACH LAYER ===
+
+Layer 1: Database (MySQL)
+- XAMPP running
+- MySQL service started
+- Database "portfolio_db" exists
+- Tables created
+- Data inserted
+
+Test: Open phpMyAdmin
+
+Layer 2: Backend (Node.js/Express)
+- Node.js installed
+- Dependencies installed (npm install)
+- Server running (npm start)
+- Connected to database
+- API routes working
+
+Test: http://localhost:5000/api/profile
+
+Layer 3: Frontend (React)
+- Node.js installed
+- Dependencies installed (npm install)
+- Development server running (npm start)
+- Configured to connect to backend
+- No console errors
+
+Test: http://localhost:3000
+
+Layer 4: Communication
+- Backend can query database
+- Frontend can call backend API
+- CORS enabled on backend
+- No network errors
+
+Test: Login and check browser console
+
+=== COMMON CONNECTION ISSUES ===
+
+Issue: "Cannot connect to database"
+Check:
+- MySQL running in XAMPP
+- Database exists in phpMyAdmin
+- Credentials correct in backend/.env
+
+Issue: "Network Error" on login
+Check:
+- Backend server running
+- Port 5000 not blocked
+- Backend terminal shows no errors
+
+Issue: "CORS Error"
+Check:
+- Backend has cors() enabled
+- Frontend API URL correct
+- Backend started before frontend
+
+Issue: "Server Error"
+Check:
+- Backend can connect to database
+- Run: node test_connection.js
+- Check backend terminal for errors
+
+=== STEP BY STEP VERIFICATION ===
+
+Step 1: Database Layer
+[ ] XAMPP opened
+[ ] MySQL started (green)
+[ ] phpMyAdmin accessible: http://localhost/phpmyadmin
+[ ] Database "portfolio_db" visible
+[ ] Tables exist (admin, profile, etc.)
+
+Step 2: Backend Layer
+[ ] In backend folder
+[ ] npm install completed
+[ ] npm start running
+[ ] Shows "Server running on port 5000"
+[ ] No error messages
+[ ] Test URL works: http://localhost:5000/api/profile
+
+Step 3: Frontend Layer
+[ ] In frontend folder
+[ ] npm install completed
+[ ] npm start running
+[ ] Browser opens: http://localhost:3000
+[ ] Website loads (even if blank)
+[ ] No console errors (F12)
+
+Step 4: Full Connection
+[ ] Login page loads
+[ ] Can type in fields
+[ ] Login button clickable
+[ ] Login works: admin / admin123
+[ ] Redirects to dashboard
+[ ] Can navigate pages
+
+=== SUCCESS INDICATORS ===
+
+Database Connected:
+- node test_connection.js shows all ✓
+- No connection errors
+- Tables and data visible
+
+Backend Working:
+- Terminal shows "Server running on port 5000"
+- http://localhost:5000/api/profile returns JSON
+- No red error messages in terminal
+
+Frontend Working:
+- Browser shows website at http://localhost:3000
+- Console (F12) shows no red errors
+- Pages load when clicked
+
+Full Connection Working:
+- Can login successfully
+- Dashboard loads after login
+- Can upload images
+- Changes save to database
+- Public pages show data from database
+
+=== WHAT TO DO IF CONNECTIONS FAIL ===
+
+1. Run CHECK_CONNECTIONS.bat
+2. Follow error messages
+3. Fix issues one by one
+4. Test again after each fix
+5. Check this file for solutions
+
+=== NEED MORE HELP? ===
+
+Run these commands and share the output:
+
+1. cd backend
+   node test_connection.js
+
+2. Check if backend running:
+   netstat -an | find "5000"
+
+3. Check if MySQL running:
+   netstat -an | find "3306"
+
+This will help identify the exact problem!

@@ -1,0 +1,88 @@
+ADMIN LOGIN FIX
+
+If you're getting "Invalid credentials" error, follow these steps:
+
+=== SOLUTION 1: Import the Fix File ===
+
+1. Open phpMyAdmin (http://localhost/phpmyadmin)
+2. Select "portfolio_db" database
+3. Click "SQL" tab
+4. Copy and paste this SQL:
+
+DELETE FROM admin;
+INSERT INTO admin (username, email, password) 
+VALUES ('admin', 'admin@portfolio.com', '$2a$10$SNy/R8cXFTSqADV9uIx01OXwg1VuN54xp7JOAa9Ntrar9O6J0UVAW');
+
+5. Click "Go"
+6. Try logging in again with:
+   Username: admin
+   Password: admin123
+
+=== SOLUTION 2: Import Fix File ===
+
+1. Open phpMyAdmin
+2. Select "portfolio_db" database
+3. Click "Import" tab
+4. Choose file: database/fix_admin_login.sql
+5. Click "Go"
+6. Login with: admin / admin123
+
+=== SOLUTION 3: Check Database ===
+
+1. In phpMyAdmin, click "portfolio_db"
+2. Click "admin" table
+3. Check if admin user exists
+4. If not, run the SQL from Solution 1
+
+=== SOLUTION 4: Recreate Database ===
+
+If nothing works, recreate the database:
+
+1. Import: database/DROP_DATABASE.sql
+2. Import: database/portfolio_db.sql (updated with correct password)
+3. Login with: admin / admin123
+
+=== VERIFY LOGIN ===
+
+After fixing:
+- Go to: http://localhost:3000/admin/login
+- Username: admin
+- Password: admin123
+- Should redirect to dashboard
+
+=== STILL NOT WORKING? ===
+
+Check these:
+
+1. Backend is running:
+   - Terminal should show "Server running on port 5000"
+   - No errors in backend terminal
+
+2. Frontend is running:
+   - Should be at http://localhost:3000
+   - Check browser console for errors (F12)
+
+3. Database connection:
+   - Check backend/.env file
+   - DB_NAME=portfolio_db
+   - DB_USER=root
+   - DB_PASSWORD= (empty for XAMPP)
+
+4. Check backend terminal for errors when you try to login
+
+=== DEFAULT CREDENTIALS ===
+
+Username: admin
+Password: admin123
+
+Do NOT change these until you successfully login first time!
+
+=== AFTER SUCCESSFUL LOGIN ===
+
+Change your password:
+1. Login to dashboard
+2. Go to admin panel
+3. Update password to something secure
+
+The password hash '$2a$10$SNy/R8cXFTSqADV9uIx01OXwg1VuN54xp7JOAa9Ntrar9O6J0UVAW'
+corresponds to password: admin123

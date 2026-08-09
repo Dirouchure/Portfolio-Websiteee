@@ -1,0 +1,4 @@
+.admin-page input[type="file"] {
+  padding: 0.5rem 0;
+  cursor: pointer;
+}

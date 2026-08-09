@@ -1,0 +1,189 @@
+PORTFOLIO WEBSITE SETUP INSTRUCTIONS
+
+=== PREREQUISITES ===
+1. Node.js (v14 or higher)
+2. XAMPP installed and running
+3. MySQL database running on localhost
+
+=== DATABASE SETUP ===
+1. Start XAMPP and ensure MySQL is running
+2. Open phpMyAdmin (http://localhost/phpmyadmin)
+3. Import database:
+   - Click "Import" tab
+   - Choose file: database/portfolio_db.sql
+   - Click "Go"
+   
+OR run SQL commands directly:
+   - Open SQL tab in phpMyAdmin
+   - Copy and paste contents of database/portfolio_db.sql
+   - Click "Go"
+
+Optional: Import sample data
+   - After importing portfolio_db.sql
+   - Import database/sample_data.sql for demo content
+
+Default admin credentials:
+Username: admin
+Password: admin123
+
+=== BACKEND SETUP ===
+1. Open terminal in backend folder
+2. Install dependencies:
+   npm install
+3. Configure .env file (already created with default settings):
+   PORT=5000
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=
+   DB_NAME=portfolio_db
+   JWT_SECRET=your_jwt_secret_key_change_this_in_production
+4. Start backend server:
+   npm start
+   (or for development with auto-reload: npm run dev)
+
+Backend will run on: http://localhost:5000
+
+=== FRONTEND SETUP ===
+1. Open terminal in frontend folder
+2. Install dependencies:
+   npm install
+3. Start frontend:
+   npm start
+
+Frontend will run on: http://localhost:3000
+
+=== TESTING THE APPLICATION ===
+
+Public Pages:
+- Home: http://localhost:3000/
+- About: http://localhost:3000/about
+- Skills: http://localhost:3000/skills
+- Education: http://localhost:3000/education
+- Experience: http://localhost:3000/experience
+- Projects: http://localhost:3000/projects
+- Certificates: http://localhost:3000/certificates
+- Contact: http://localhost:3000/contact
+
+Admin Panel:
+- Login: http://localhost:3000/admin/login
+- Username: admin
+- Password: admin123
+
+=== CHANGING DEFAULT PASSWORD ===
+To generate new password hash:
+1. Open Node.js terminal
+2. Run:
+   node
+   const bcrypt = require('bcryptjs');
+   bcrypt.hash('your_new_password', 10).then(hash => console.log(hash));
+3. Copy the hash
+4. Update in database:
+   UPDATE admin SET password = 'paste_hash_here' WHERE username = 'admin';
+
+=== TROUBLESHOOTING ===
+
+Database connection error:
+- Ensure XAMPP MySQL is running
+- Check DB credentials in backend/.env
+- Verify database exists in phpMyAdmin
+
+Port already in use:
+- Change PORT in backend/.env
+- Frontend proxy in package.json may need update
+
+CORS errors:
+- Ensure backend is running
+- Check API_URL in frontend/src/config/api.js
+
+File upload errors:
+- Ensure backend/uploads folder exists
+- Check folder permissions
+
+=== PROJECT STRUCTURE ===
+
+backend/
+├── config/         - Database configuration
+├── middleware/     - Authentication and file upload
+├── routes/         - API endpoints
+├── uploads/        - Uploaded files storage
+├── .env           - Environment variables
+├── database.sql   - Database schema
+└── server.js      - Main server file
+
+frontend/
+├── public/        - Static files
+├── src/
+│   ├── components/  - Reusable components
+│   ├── config/      - API configuration
+│   ├── pages/       - Page components
+│   │   ├── admin/   - Admin pages
+│   │   └── ...      - Public pages
+│   ├── App.js       - Main app component
+│   └── index.js     - Entry point
+└── package.json
+
+=== API ENDPOINTS ===
+
+Authentication:
+POST /api/auth/login
+POST /api/auth/change-password
+
+Profile:
+GET /api/profile
+PUT /api/profile
+POST /api/profile/upload-image
+POST /api/profile/upload-resume
+
+Skills:
+GET /api/skills
+POST /api/skills
+PUT /api/skills/:id
+DELETE /api/skills/:id
+
+Projects:
+GET /api/projects
+GET /api/projects/:id
+POST /api/projects
+PUT /api/projects/:id
+DELETE /api/projects/:id
+
+Education:
+GET /api/education
+POST /api/education
+PUT /api/education/:id
+DELETE /api/education/:id
+
+Experience:
+GET /api/experience
+POST /api/experience
+PUT /api/experience/:id
+DELETE /api/experience/:id
+
+Certificates:
+GET /api/certificates
+POST /api/certificates
+PUT /api/certificates/:id
+DELETE /api/certificates/:id
+
+Contact:
+POST /api/contact
+GET /api/contact (protected)
+PUT /api/contact/:id/read (protected)
+DELETE /api/contact/:id (protected)
+
+=== DEPLOYMENT ===
+
+For production deployment:
+1. Update JWT_SECRET in .env to a secure random string
+2. Change default admin password
+3. Update API_URL in frontend/src/config/api.js
+4. Build frontend: npm run build
+5. Configure web server to serve frontend build
+6. Set up proper database credentials
+7. Enable HTTPS
+8. Set up proper file upload limits
+
+=== SUPPORT ===
+Check console logs for errors
+Verify all dependencies are installed
+Ensure ports 3000 and 5000 are available

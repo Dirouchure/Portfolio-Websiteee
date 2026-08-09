@@ -1,0 +1,188 @@
+PORTFOLIO WEBSITE - PROJECT STRUCTURE
+
+portfolio-website/
+│
+├── backend/                          # Node.js/Express Backend
+│   ├── config/
+│   │   └── db.js                     # MySQL database connection
+│   ├── middleware/
+│   │   ├── auth.js                   # JWT authentication middleware
+│   │   └── upload.js                 # File upload configuration (Multer)
+│   ├── routes/
+│   │   ├── auth.js                   # Login & authentication routes
+│   │   ├── certificates.js           # Certificates CRUD routes
+│   │   ├── contact.js                # Contact form routes
+│   │   ├── education.js              # Education CRUD routes
+│   │   ├── experience.js             # Experience CRUD routes
+│   │   ├── profile.js                # Profile management routes
+│   │   ├── projects.js               # Projects CRUD routes
+│   │   └── skills.js                 # Skills CRUD routes
+│   ├── uploads/                      # Uploaded files storage
+│   │   └── .gitkeep                  # Keep folder in git
+│   ├── .env                          # Environment variables (DB, JWT secret)
+│   ├── .gitignore                    # Git ignore file
+│   ├── package.json                  # Backend dependencies
+│   └── server.js                     # Main Express server
+│
+├── frontend/                         # React Frontend
+│   ├── public/
+│   │   └── index.html                # HTML template
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Footer.js             # Footer component
+│   │   │   ├── Footer.css
+│   │   │   ├── Navbar.js             # Navigation bar
+│   │   │   ├── Navbar.css
+│   │   │   └── ProtectedRoute.js     # Route protection for admin
+│   │   ├── config/
+│   │   │   └── api.js                # Axios API configuration
+│   │   ├── pages/
+│   │   │   ├── admin/                # Admin Panel Pages
+│   │   │   │   ├── Dashboard.js      # Admin dashboard
+│   │   │   │   ├── Dashboard.css
+│   │   │   │   ├── Login.js          # Admin login
+│   │   │   │   ├── Login.css
+│   │   │   │   ├── ManageCertificates.js
+│   │   │   │   ├── ManageCertificates.css
+│   │   │   │   ├── ManageEducation.js
+│   │   │   │   ├── ManageEducation.css
+│   │   │   │   ├── ManageExperience.js
+│   │   │   │   ├── ManageExperience.css
+│   │   │   │   ├── ManageProfile.js
+│   │   │   │   ├── ManageProfile.css
+│   │   │   │   ├── ManageProjects.js
+│   │   │   │   ├── ManageProjects.css
+│   │   │   │   ├── ManageSkills.js
+│   │   │   │   ├── ManageSkills.css
+│   │   │   │   ├── Messages.js       # Contact messages
+│   │   │   │   └── Messages.css
+│   │   │   ├── About.js              # Public Pages
+│   │   │   ├── About.css
+│   │   │   ├── Certificates.js
+│   │   │   ├── Certificates.css
+│   │   │   ├── Contact.js
+│   │   │   ├── Contact.css
+│   │   │   ├── Education.js
+│   │   │   ├── Education.css
+│   │   │   ├── Experience.js
+│   │   │   ├── Experience.css
+│   │   │   ├── Home.js
+│   │   │   ├── Home.css
+│   │   │   ├── Projects.js
+│   │   │   ├── Projects.css
+│   │   │   ├── Skills.js
+│   │   │   └── Skills.css
+│   │   ├── App.js                    # Main app with routing
+│   │   ├── App.css                   # Global app styles
+│   │   ├── index.js                  # React entry point
+│   │   └── index.css                 # Global CSS reset
+│   ├── .gitignore                    # Git ignore file
+│   └── package.json                  # Frontend dependencies
+│
+├── database/                         # Database Files
+│   ├── DROP_DATABASE.sql             # Drop database script
+│   ├── IMPORT_ORDER.txt              # Import instructions
+│   ├── portfolio_db.sql              # Main database schema
+│   ├── README.txt                    # Database setup guide
+│   └── sample_data.sql               # Optional sample data
+│
+├── PROJECT_STRUCTURE.txt             # This file
+└── SETUP.txt                         # Complete setup guide
+
+=== TECHNOLOGY STACK ===
+
+Backend:
+- Node.js & Express.js
+- MySQL (via XAMPP)
+- JWT for authentication
+- bcryptjs for password hashing
+- Multer for file uploads
+- express-validator for input validation
+
+Frontend:
+- React 18
+- React Router for navigation
+- Axios for API calls
+- React Icons for UI icons
+- CSS for styling (responsive design)
+
+=== KEY FEATURES ===
+
+Public Interface:
+✓ Home page with profile info
+✓ About page with biography
+✓ Skills page with proficiency bars
+✓ Education timeline
+✓ Work experience timeline
+✓ Projects portfolio with images
+✓ Certificates showcase
+✓ Contact form
+✓ Resume download
+✓ Responsive mobile design
+
+Admin Panel:
+✓ Secure login system
+✓ Dashboard overview
+✓ Profile management
+✓ Skills CRUD operations
+✓ Projects management with image upload
+✓ Education management
+✓ Experience management
+✓ Certificates management with images
+✓ Contact messages inbox
+✓ File uploads (images, resume)
+
+Security:
+✓ JWT authentication
+✓ Password hashing (bcrypt)
+✓ Protected routes
+✓ Input validation
+✓ CORS configuration
+✓ File upload restrictions
+
+=== FILE CONNECTIONS ===
+
+Backend to Database:
+- backend/config/db.js → MySQL connection
+- backend/.env → Database credentials
+- database/portfolio_db.sql → Database schema
+
+Frontend to Backend:
+- frontend/src/config/api.js → Backend API URL (http://localhost:5000)
+- All API calls use Axios with JWT token
+
+Backend Routes:
+- backend/server.js imports all route files
+- All routes connected under /api prefix
+- Protected routes use auth middleware
+
+Frontend Routing:
+- frontend/src/App.js defines all routes
+- Public routes accessible to all
+- Admin routes protected by ProtectedRoute component
+
+File Uploads:
+- Uploaded to: backend/uploads/
+- Accessible via: http://localhost:5000/uploads/[filename]
+- Used by: profile images, project images, certificates, resumes
+
+=== PORT CONFIGURATION ===
+
+Backend:  http://localhost:5000
+Frontend: http://localhost:3000
+MySQL:    localhost:3306
+phpMyAdmin: http://localhost/phpmyadmin
+
+=== ENVIRONMENT VARIABLES ===
+
+Backend (.env):
+- PORT: Server port
+- DB_HOST: MySQL host
+- DB_USER: MySQL username
+- DB_PASSWORD: MySQL password
+- DB_NAME: Database name
+- JWT_SECRET: Secret key for JWT tokens
+
+Frontend:
+- API URL configured in: src/config/api.js
+- Default: http://localhost:5000/api

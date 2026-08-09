@@ -1,0 +1,193 @@
+HOW TO SET YOUR PROFILE
+
+=== METHOD 1: Using update_profile.sql (Recommended) ===
+
+1. Open database/update_profile.sql in a text editor
+2. Replace the following with YOUR information:
+   - 'Your Full Name' → Your actual name
+   - 'your.email@example.com' → Your email
+   - '+251-XXX-XXX-XXX' → Your phone number
+   - Update social media URLs (GitHub, LinkedIn, Twitter)
+   
+3. Customize skills, projects, experience, and education to match YOUR work
+4. Import in phpMyAdmin:
+   - Open phpMyAdmin
+   - Select portfolio_db database
+   - Click "SQL" tab
+   - Copy and paste the updated update_profile.sql content
+   - Click "Go"
+
+=== METHOD 2: Using Admin Panel (After Setup) ===
+
+1. Complete the basic setup (import portfolio_db.sql)
+2. Start backend and frontend servers
+3. Login to admin panel: http://localhost:3000/admin/login
+   - Username: admin
+   - Password: admin123
+4. Navigate to each section and update:
+   - Manage Profile → Update personal information
+   - Manage Skills → Add your video editing skills
+   - Manage Projects → Add your portfolio projects
+   - Manage Education → Add your education
+   - Manage Experience → Add your work experience
+   - Manage Certificates → Add your certifications
+
+=== METHOD 3: Direct SQL Update (Quick) ===
+
+Run this SQL in phpMyAdmin (SQL tab):
+
+UPDATE profile SET 
+  full_name = 'YOUR NAME',
+  title = 'YOUR TITLE',
+  bio = 'YOUR BIO',
+  email = 'YOUR EMAIL',
+  phone = 'YOUR PHONE'
+WHERE id = 1;
+
+=== PROFILE FIELDS EXPLANATION ===
+
+full_name: Your complete name
+title: Your professional title (e.g., "Video Editor", "Content Creator")
+bio: Short description about yourself (2-3 sentences)
+objective: Your career goals and what you're seeking
+phone: Contact phone number
+email: Contact email address
+location: City/Country where you're based
+profile_image: Will be uploaded through admin panel
+resume_file: Will be uploaded through admin panel
+github_url: Your GitHub profile (if applicable)
+linkedin_url: Your LinkedIn profile
+twitter_url: Your Twitter/X profile
+
+=== CUSTOMIZING FOR VIDEO EDITOR PROFILE ===
+
+The update_profile.sql is already configured for a Video Editor/Content Creator with:
+
+Skills Categories:
+- Video Editing Software (Premiere Pro, After Effects, etc.)
+- Design Tools (Photoshop, etc.)
+- Audio Editing (Audition, etc.)
+- Post-Production (Color Grading, VFX, etc.)
+- Content Strategy (YouTube SEO, Social Media)
+
+Project Types:
+- Corporate Videos
+- Music Videos
+- Social Media Content
+- Documentary
+- Promotional Videos
+
+Experience:
+- Video Editor roles
+- Freelance work
+- Studio experience
+
+Certificates:
+- Adobe certifications
+- Online course certificates
+- Professional training
+
+=== ADDING YOUR WORK SAMPLES ===
+
+After updating your profile:
+
+1. Upload Project Images:
+   - Login to admin panel
+   - Go to "Manage Projects"
+   - Click "Add Project" or "Edit" existing
+   - Upload thumbnail/screenshot of your video
+   - Add YouTube/Vimeo video links
+
+2. Upload Profile Photo:
+   - Go to "Manage Profile"
+   - Scroll to "Upload Profile Image"
+   - Choose your professional photo
+   - Save
+
+3. Upload Resume/CV:
+   - Go to "Manage Profile"
+   - Scroll to "Upload Resume"
+   - Choose your PDF resume
+   - Save
+
+=== TIPS FOR VIDEO EDITOR PORTFOLIO ===
+
+Projects Section:
+- Add thumbnails from your best video work
+- Link to YouTube/Vimeo for full videos
+- Describe the type of video and your role
+- Mention software and techniques used
+
+Skills Section:
+- Focus on editing software proficiency
+- Include design and audio skills
+- Add color grading and effects skills
+- Include content strategy if applicable
+
+Experience Section:
+- List freelance or full-time editing work
+- Describe types of videos you've edited
+- Mention clients or brands you've worked with
+- Highlight your specializations
+
+Certificates Section:
+- Adobe certifications
+- Online courses completed
+- Workshops attended
+- Awards or recognitions
+
+=== SOCIAL MEDIA LINKS ===
+
+Update these with your actual profiles:
+
+GitHub: (Optional for video editors, but useful if you do web work)
+LinkedIn: Important for professional networking
+Twitter/X: Good for sharing content and industry connections
+Instagram: Great for video editors to showcase work
+YouTube: Essential - link your channel or demo reel
+Vimeo: Professional video portfolio platform
+
+=== CONTACT INFORMATION ===
+
+Make sure to add:
+- Professional email address
+- Phone number (optional, or use contact form only)
+- Location (city/country)
+- Time zone (if working remotely)
+
+=== AFTER UPDATING PROFILE ===
+
+1. Test the website to see your information displayed
+2. Check all links work correctly
+3. Ensure uploaded images display properly
+4. Test contact form functionality
+5. Verify resume downloads correctly
+
+=== EXAMPLE VIDEO EDITOR PROFILE ===
+
+Full Name: Abebe Kebede
+Title: Professional Video Editor & Motion Graphics Designer
+Bio: Creative video editor with 3+ years of experience in corporate video production, 
+social media content, and music videos. Specialized in Adobe Premiere Pro and After Effects 
+with a passion for storytelling through visual media.
+
+Objective: Seeking opportunities to work with creative teams on innovative video projects 
+that push the boundaries of visual storytelling and engage audiences across digital platforms.
+
+Location: Addis Ababa, Ethiopia
+Email: abebe.editor@email.com
+Phone: +251-911-123-456
+
+=== READY TO CUSTOMIZE? ===
+
+Follow these steps in order:
+1. Edit database/update_profile.sql with YOUR information
+2. Import it in phpMyAdmin
+3. Start your backend and frontend servers
+4. Login to admin panel
+5. Upload your profile photo and resume
+6. Add your actual project images and video links
+7. Customize skills, experience, and education as needed
+8. Test everything works correctly
+
+Your professional portfolio will be ready to share!
