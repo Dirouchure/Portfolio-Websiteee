@@ -19,13 +19,19 @@ function Login() {
     e.preventDefault();
     setError('');
 
+    if (!credentials.username || !credentials.password) {
+      setError('Please enter both username and password');
+      return;
+    }
+
     try {
       const response = await api.post('/auth/login', credentials);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       navigate('/admin/dashboard');
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+      setError(errorMessage);
     }
   };
 

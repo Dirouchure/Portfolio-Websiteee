@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 import api from '../config/api';
+import PageMeta from '../components/PageMeta';
 import './Contact.css';
 
 function Contact() {
@@ -10,36 +12,68 @@ function Contact() {
     message: ''
   });
   const [status, setStatus] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('sending');
+    setErrorMsg('');
 
     try {
-      await api.post('/contact', formData);
+      const response = await api.post('/contact', formData);
       setStatus('success');
+      setSuccessMsg(response.data?.message || 'Message sent successfully!');
+      if (response.data?.autoReplySent) {
+        setSuccessMsg('Message sent! Check your inbox for a confirmation email.');
+      }
       setFormData({ name: '', email: '', subject: '', message: '' });
-      
-      setTimeout(() => setStatus(''), 3000);
+      setTimeout(() => { setStatus(''); setSuccessMsg(''); }, 6000);
     } catch (error) {
       setStatus('error');
-      setTimeout(() => setStatus(''), 3000);
+      setErrorMsg(error.response?.data?.message || 'Failed to send message. Please try again.');
+      setTimeout(() => setStatus(''), 5000);
     }
   };
 
   return (
     <div className="contact">
+      <PageMeta
+        title="Contact Diro Uchure | Video Editor Portfolio"
+        description="Get in touch with Diro Uchure for video editing projects, collaborations, and inquiries."
+      />
       <div className="container">
         <h1 className="page-title">Contact Me</h1>
+        <p className="contact-subtitle">Have a project in mind? I'd love to hear from you.</p>
         
         <div className="contact-container">
+          {status === 'success' && (
+            <div className="contact-banner success">
+              <FaCheckCircle />
+              <div>
+                <strong>Message sent!</strong>
+                <p>{successMsg || 'Thank you for reaching out. I\'ll get back to you soon.'}</p>
+              </div>
+            </div>
+          )}
+
+          {status === 'error' && (
+            <div className="contact-banner error">
+              <FaExclamationCircle />
+              <div>
+                <strong>Could not send message</strong>
+                <p>{errorMsg}</p>
+              </div>
+            </div>
+          )}
+
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Name</label>
@@ -48,6 +82,7 @@ function Contact() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                placeholder="Your name"
                 required
               />
             </div>
@@ -59,6 +94,7 @@ function Contact() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder="your@email.com"
                 required
               />
             </div>
@@ -70,6 +106,7 @@ function Contact() {
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
+                placeholder="What's this about?"
               />
             </div>
 
@@ -80,20 +117,15 @@ function Contact() {
                 rows="5"
                 value={formData.message}
                 onChange={handleChange}
+                placeholder="Tell me about your project..."
                 required
               ></textarea>
             </div>
 
-            <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
+            <button type="submit" className="btn btn-primary contact-submit" disabled={status === 'sending'}>
+              <FaPaperPlane />
               {status === 'sending' ? 'Sending...' : 'Send Message'}
             </button>
-
-            {status === 'success' && (
-              <p className="status-message success">Message sent successfully!</p>
-            )}
-            {status === 'error' && (
-              <p className="status-message error">Failed to send message. Please try again.</p>
-            )}
           </form>
         </div>
       </div>

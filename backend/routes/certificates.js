@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const verifyToken = require('../middleware/auth');
+const { sendServerError } = require('../utils/errors');
 const upload = require('../middleware/upload');
 
 router.get('/', async (req, res) => {
@@ -9,13 +10,14 @@ router.get('/', async (req, res) => {
     const [rows] = await db.query('SELECT * FROM certificates ORDER BY issue_date DESC');
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
 router.post('/', verifyToken, upload.single('image'), async (req, res) => {
   const { title, organization, issue_date } = req.body;
-  const certificate_image = req.file ? req.file.filename : null;
+  // Save with folder path: certificates/filename
+  const certificate_image = req.file ? 'certificates/' + req.file.filename : null;
 
   try {
     const [result] = await db.query(
@@ -25,7 +27,7 @@ router.post('/', verifyToken, upload.single('image'), async (req, res) => {
 
     res.status(201).json({ message: 'Certificate added successfully', id: result.insertId });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -39,7 +41,8 @@ router.put('/:id', verifyToken, upload.single('image'), async (req, res) => {
 
     if (req.file) {
       query += ', certificate_image = ?';
-      params.push(req.file.filename);
+      // Save with folder path: certificates/filename
+      params.push('certificates/' + req.file.filename);
     }
 
     query += ' WHERE id = ?';
@@ -49,7 +52,7 @@ router.put('/:id', verifyToken, upload.single('image'), async (req, res) => {
 
     res.json({ message: 'Certificate updated successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -60,7 +63,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     await db.query('DELETE FROM certificates WHERE id = ?', [id]);
     res.json({ message: 'Certificate deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 

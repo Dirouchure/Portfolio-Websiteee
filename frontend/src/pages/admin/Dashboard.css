@@ -18,12 +18,73 @@
 
 .dashboard-header h1 {
   color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-subtitle {
+  color: #7f8c8d;
+  font-size: 0.95rem;
 }
 
 .dashboard-user {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.stats-grid {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 3px solid #3498db;
+  position: relative;
+}
+
+.stat-icon {
+  font-size: 1.75rem;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+}
+
+.stat-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: #e74c3c;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 600;
 }
 
 .dashboard-grid {
@@ -31,22 +92,26 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .dashboard-card {
   background-color: white;
-  padding: 2rem;
+  padding: 1.75rem;
   border-radius: 10px;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dashboard-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.dashboard-card-highlight {
+  border: 2px solid #3498db;
 }
 
 .dashboard-card h3 {
@@ -63,9 +128,11 @@
   .dashboard-header {
     flex-direction: column;
     gap: 1rem;
+    align-items: flex-start;
   }
 
-  .dashboard-grid {
+  .dashboard-grid,
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -6,7 +6,6 @@ A full-stack portfolio website for video editors and creative professionals with
 
 - **Complete Admin Panel** - Manage all content without coding
 - **Projects Showcase** - Display your work with detailed information
-- **Video Reel** - Embed YouTube/Vimeo videos
 - **Services** - List your offerings with pricing
 - **Skills & Education** - Professional background
 - **Experience** - Work history
@@ -54,16 +53,23 @@ cd backend
 npm install
 ```
 
-Create `.env` file in backend folder:
+Create `.env` from the example (default port **5001** — port 5000 is often used by other apps):
+
+```bash
+cd backend
+copy .env.example .env
+```
 
 ```env
-PORT=5000
+PORT=5001
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=portfolio_db
 JWT_SECRET=your_jwt_secret_key_change_this_in_production
 ```
+
+For the frontend, copy `frontend/.env.example` to `frontend/.env` so the app talks to the correct API port.
 
 ### 3. Setup Database
 
@@ -135,7 +141,6 @@ portfolio-website/
    - Education
    - Experience
    - Certificates
-   - Video Reel
    - Services
    - Contact messages
 
@@ -148,7 +153,6 @@ portfolio-website/
 - Education: `/education`
 - Experience: `/experience`
 - Certificates: `/certificates`
-- Video Reel: `/video-reel`
 - Services: `/services`
 - Contact: `/contact`
 
@@ -167,12 +171,6 @@ portfolio-website/
 2. Click "Add Project"
 3. Fill in details and upload images
 4. Mark important projects as "Featured"
-
-### Add Videos
-
-1. Go to "Manage Video Reel"
-2. Add YouTube or Vimeo video URLs
-3. Categorize your videos
 
 ## 📱 Responsive Design
 
@@ -215,13 +213,42 @@ Use services like:
 Create `.env` file with:
 
 ```env
-PORT=5000
+PORT=5001
 DB_HOST=your_database_host
 DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_NAME=portfolio_db
 JWT_SECRET=your_secret_key_here
+CORS_ORIGIN=https://your-frontend-domain.com
 ```
+
+**Before going live:** change the default admin password, use a long random `JWT_SECRET`, and set `CORS_ORIGIN` to your frontend URL only.
+
+## 📧 Email Notifications (Contact Form)
+
+When someone submits the contact form, messages are always saved to the database. If SMTP is configured, you also receive an email notification and the visitor gets an auto-reply.
+
+Add these to `backend/.env` (see `backend/.env.example`):
+
+```env
+MAIL_TO=diro.uchure@gmail.com
+MAIL_FROM=your-portfolio@example.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@gmail.com
+SMTP_PASS=your_app_password
+MAIL_AUTO_REPLY=true
+```
+
+### Gmail setup
+
+1. Enable **2-Step Verification** on your Google account
+2. Go to [Google App Passwords](https://myaccount.google.com/apppasswords)
+3. Create an app password for "Mail"
+4. Use that 16-character password as `SMTP_PASS` (not your regular Gmail password)
+5. Set `SMTP_USER` to your Gmail address and `MAIL_FROM` to the same or a display address
+
+**Without SMTP configured:** the contact form still works — messages are saved to the database and viewable in Admin → Messages.
 
 ## 🤝 Contributing
 

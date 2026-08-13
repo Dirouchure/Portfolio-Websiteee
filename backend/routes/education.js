@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const verifyToken = require('../middleware/auth');
+const { sendServerError } = require('../utils/errors');
 
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM education ORDER BY end_year DESC');
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -23,7 +24,7 @@ router.post('/', verifyToken, async (req, res) => {
 
     res.status(201).json({ message: 'Education added successfully', id: result.insertId });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -39,7 +40,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 
     res.json({ message: 'Education updated successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -50,7 +51,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     await db.query('DELETE FROM education WHERE id = ?', [id]);
     res.json({ message: 'Education deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 

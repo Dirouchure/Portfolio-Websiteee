@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../config/api';
 import './Navbar.css';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [siteName, setSiteName] = useState('Diro Uchure');
+
+  useEffect(() => {
+    api.get('/profile')
+      .then((response) => {
+        if (response.data?.full_name) {
+          setSiteName(response.data.full_name);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -17,7 +29,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo" onClick={closeMenu}>
-          Portfolio
+          {siteName}
         </Link>
         
         <div className="menu-icon" onClick={toggleMenu}>
@@ -49,9 +61,6 @@ function Navbar() {
           </li>
           <li className="nav-item">
             <Link to="/certificates" className="nav-link" onClick={closeMenu}>Certificates</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/video-reel" className="nav-link" onClick={closeMenu}>Video Reel</Link>
           </li>
           <li className="nav-item">
             <Link to="/services" className="nav-link" onClick={closeMenu}>Services</Link>

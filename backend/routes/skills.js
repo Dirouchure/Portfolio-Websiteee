@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const verifyToken = require('../middleware/auth');
+const { sendError } = require('../utils/errors');
 
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM skills ORDER BY category, skill_name');
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendError(res, 500, 'Server error', error);
   }
 });
 
@@ -23,7 +24,7 @@ router.post('/', verifyToken, async (req, res) => {
 
     res.status(201).json({ message: 'Skill added successfully', id: result.insertId });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendError(res, 500, 'Server error', error);
   }
 });
 
@@ -39,7 +40,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 
     res.json({ message: 'Skill updated successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendError(res, 500, 'Server error', error);
   }
 });
 
@@ -50,7 +51,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     await db.query('DELETE FROM skills WHERE id = ?', [id]);
     res.json({ message: 'Skill deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendError(res, 500, 'Server error', error);
   }
 });
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const verifyToken = require('../middleware/auth');
+const { sendServerError } = require('../utils/errors');
 const upload = require('../middleware/upload');
 
 router.get('/', async (req, res) => {
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
     const [rows] = await db.query('SELECT * FROM projects ORDER BY is_featured DESC, created_at DESC');
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -26,7 +27,7 @@ router.get('/:id', async (req, res) => {
     
     res.json(rows[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -36,7 +37,8 @@ router.post('/', verifyToken, upload.single('image'), async (req, res) => {
     status, client_name, start_date, end_date, duration, team_size,
     project_url, highlights, tags, is_featured
   } = req.body;
-  const image = req.file ? req.file.filename : null;
+  // Save with folder path: projects/filename
+  const image = req.file ? 'projects/' + req.file.filename : null;
 
   try {
     const [result] = await db.query(
@@ -54,7 +56,7 @@ router.post('/', verifyToken, upload.single('image'), async (req, res) => {
 
     res.status(201).json({ message: 'Project added successfully', id: result.insertId });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -80,7 +82,8 @@ router.put('/:id', verifyToken, upload.single('image'), async (req, res) => {
 
     if (req.file) {
       query += ', image = ?';
-      params.push(req.file.filename);
+      // Save with folder path: projects/filename
+      params.push('projects/' + req.file.filename);
     }
 
     query += ' WHERE id = ?';
@@ -90,7 +93,7 @@ router.put('/:id', verifyToken, upload.single('image'), async (req, res) => {
 
     res.json({ message: 'Project updated successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -101,7 +104,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     await db.query('DELETE FROM projects WHERE id = ?', [id]);
     res.json({ message: 'Project deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 

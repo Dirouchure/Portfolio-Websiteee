@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaGithub, FaExternalLinkAlt, FaFilter, FaSearch, FaTimes, FaCalendar, FaUsers, FaClock, FaEye, FaStar, FaCheckCircle, FaSpinner, FaLightbulb } from 'react-icons/fa';
-import api from '../config/api';
+import api, { BASE_URL } from '../config/api';
 import './Projects.css';
 
 function Projects() {
@@ -143,7 +143,7 @@ function Projects() {
                   {project.image && (
                     <div className="project-image">
                       <img 
-                        src={`http://localhost:5000/uploads/${project.image}`} 
+                        src={`${BASE_URL}/uploads/${project.image}`} 
                         alt={project.title} 
                       />
                       <div className="project-overlay">
@@ -201,7 +201,7 @@ function Projects() {
                   {project.image && (
                     <div className="project-image">
                       <img 
-                        src={`http://localhost:5000/uploads/${project.image}`} 
+                        src={`${BASE_URL}/uploads/${project.image}`} 
                         alt={project.title} 
                       />
                       <div className="project-overlay">
@@ -263,7 +263,7 @@ function Projects() {
               {selectedProject.image && (
                 <div className="modal-image">
                   <img 
-                    src={`http://localhost:5000/uploads/${selectedProject.image}`} 
+                    src={`${BASE_URL}/uploads/${selectedProject.image}`} 
                     alt={selectedProject.title} 
                   />
                 </div>

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const verifyToken = require('../middleware/auth');
+const { sendServerError } = require('../utils/errors');
 
 // Get all services
 router.get('/', async (req, res) => {
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
     const [rows] = await db.query('SELECT * FROM services WHERE is_active = TRUE ORDER BY display_order ASC');
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res) => {
     }
     res.json(rows[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -41,7 +42,7 @@ router.post('/', verifyToken, async (req, res) => {
     );
     res.status(201).json({ message: 'Service added successfully', id: result.insertId });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -61,7 +62,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 
     res.json({ message: 'Service updated successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -76,7 +77,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
 
     res.json({ message: 'Service deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    sendServerError(res, error);
   }
 });
 

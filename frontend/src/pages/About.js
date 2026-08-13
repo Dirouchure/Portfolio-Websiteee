@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter, FaDownload, FaBriefcase, FaGraduationCap, FaAward, FaCode, FaCalendar, FaUser } from 'react-icons/fa';
-import api from '../config/api';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter, FaDownload, FaBriefcase, FaGraduationCap, FaAward, FaCode, FaUser } from 'react-icons/fa';
+import api, { getUploadUrl } from '../config/api';
+import PageMeta from '../components/PageMeta';
+import { ProfileSkeleton } from '../components/LoadingSkeleton';
 import './About.css';
 
 function About() {
@@ -12,19 +14,28 @@ function About() {
     experience: 0
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     fetchProfile();
     fetchStats();
+
+    const handleFocus = () => fetchProfile();
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const fetchProfile = async () => {
     try {
       const response = await api.get('/profile');
-      setProfile(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+      setProfile(response.data || {});
+      setImageError(false);
+      setError('');
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+      setError('Could not load profile. Make sure the backend is running on port 5001.');
+    } finally {
       setLoading(false);
     }
   };
@@ -51,26 +62,32 @@ function About() {
   if (loading) {
     return (
       <div className="about">
-        <div className="container">
-          <div className="loading">Loading...</div>
-        </div>
+        <ProfileSkeleton />
       </div>
     );
   }
 
+  const name = profile.full_name || 'Diro Uchure';
+
   return (
     <div className="about">
+      <PageMeta
+        title={`About ${name} | Video Editor Portfolio`}
+        description={profile.bio || `Learn more about ${name}, a professional video editor.`}
+      />
       <div className="container">
         <h1 className="page-title">About Me</h1>
+        {error && <div className="alert alert-error">{error}</div>}
         
         <div className="about-content">
           <div className="about-main">
             <div className="about-image-section">
-              {profile.profile_image ? (
+              {profile.profile_image && !imageError ? (
                 <img 
-                  src={`http://localhost:5000/uploads/${profile.profile_image}`} 
+                  src={getUploadUrl(profile.profile_image, profile.updated_at || profile.profile_image)} 
                   alt={profile.full_name}
                   className="about-profile-img"
+                  onError={() => setImageError(true)}
                 />
               ) : (
                 <div className="about-placeholder">
@@ -86,7 +103,7 @@ function About() {
                 
                 {profile.resume_file && (
                   <a 
-                    href={`http://localhost:5000/uploads/${profile.resume_file}`}
+                    href={getUploadUrl(profile.resume_file)}
                     className="btn btn-primary"
                     download
                   >

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaAward, FaCalendar, FaFilter, FaSearch } from 'react-icons/fa';
-import api from '../config/api';
+import api, { BASE_URL } from '../config/api';
 import './Certificates.css';
 
 function Certificates() {
@@ -115,7 +115,7 @@ function Certificates() {
               {cert.certificate_image && (
                 <div className="certificate-image">
                   <img 
-                    src={`http://localhost:5000/uploads/${cert.certificate_image}`} 
+                    src={`${BASE_URL}/uploads/${cert.certificate_image}`} 
                     alt={cert.title} 
                   />
                 </div>
@@ -142,7 +142,7 @@ function Certificates() {
               <button className="modal-close" onClick={() => setSelectedCert(null)}>×</button>
               {selectedCert.certificate_image && (
                 <img 
-                  src={`http://localhost:5000/uploads/${selectedCert.certificate_image}`} 
+                  src={`${BASE_URL}/uploads/${selectedCert.certificate_image}`} 
                   alt={selectedCert.title}
                 />
               )}
