@@ -34,7 +34,7 @@ function App() {
         <Routes>
           <Route path="/admin/login" element={<Login />} />
           
-          <Route path="/admin/*" element={
+          <Route path="/adn/*" element={
             <ProtectedRoute>
               <Routes>
                 <Route path="dashboard" element={<Dashboard />} />
