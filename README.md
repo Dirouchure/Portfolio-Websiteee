@@ -73,12 +73,18 @@ For the frontend, copy `frontend/.env.example` to `frontend/.env` so the app tal
 
 ### 3. Setup Database
 
+**Option A (Automated - 1 command):**
+Make sure MySQL is running in XAMPP, then run:
+```bash
+cd backend
+npm run init-db
+```
+
+**Option B (Manual via phpMyAdmin):**
 1. Start XAMPP and enable MySQL
 2. Open phpMyAdmin: http://localhost/phpmyadmin
 3. Create database: `portfolio_db`
-4. Import: `database/portfolio_db.sql`
-5. Import: `database/add_new_features.sql`
-6. (Optional) Import: `database/enhance_projects.sql`
+4. Import: `database/portfolio_db.sql` (now contains the unified, full schema)
 
 ### 4. Setup Frontend
 
