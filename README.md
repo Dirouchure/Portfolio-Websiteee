@@ -237,7 +237,7 @@ When someone submits the contact form, messages are always saved to the database
 Add these to `backend/.env` (see `backend/.env.example`):
 
 ```env
-MAIL_TO=diro.uchure@gmail.com
+MAIL_TO=dirouchure@gmail.com
 MAIL_FROM=your-portfolio@example.com
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -267,7 +267,7 @@ This project is open source and available under the MIT License.
 ## 👤 Author
 
 **Diro Uchure**
-- Email: diro.uchure@gmail.com
+- Email: dirouchure@gmail.com
 - Phone: +251940672637
 - GitHub: [@Dirouchure](https://github.com/Dirouchure)
 
@@ -281,9 +281,10 @@ This project is open source and available under the MIT License.
 
 For issues or questions:
 - Create an issue on GitHub
-- Email: diro.uchure@gmail.com
+- Email: dirouchure@gmail.com
 
 ---
 
 Made with ❤️ by Diro Uchure
+# portfolio-website
 # portfolio-website
