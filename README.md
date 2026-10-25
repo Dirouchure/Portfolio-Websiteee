@@ -288,3 +288,4 @@ For issues or questions:
 Made with ❤️ by Diro Uchure
 # portfolio-website
 # portfolio-website
+# -name-VARCHAR-100-NOT-NULL-
