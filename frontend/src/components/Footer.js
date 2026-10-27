@@ -2,21 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import api from '../config/api';
+import { defaultProfile } from '../data/defaultData';
 import './Footer.css';
 
 function Footer() {
-  const [profile, setProfile] = useState({
-    full_name: 'Diro Uchure',
-    bio: '',
-    email: 'diro.uchure@gmail.com',
-    github_url: '',
-    linkedin_url: '',
-    twitter_url: '',
+  const [profile, setProfile] = useState(() => {
+    try {
+      const cached = localStorage.getItem('portfolio_profile');
+      return cached ? { ...defaultProfile, ...JSON.parse(cached) } : defaultProfile;
+    } catch {
+      return defaultProfile;
+    }
   });
 
   useEffect(() => {
     api.get('/profile')
-      .then((response) => setProfile((prev) => ({ ...prev, ...response.data })))
+      .then((response) => {
+        if (response.data && Object.keys(response.data).length > 0) {
+          setProfile((prev) => ({ ...defaultProfile, ...prev, ...response.data }));
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -34,7 +39,7 @@ function Footer() {
         <div className="footer-content">
           <div className="footer-about">
             <h3>About</h3>
-            <p>{profile.bio || 'Professional video editor and content creator. Bringing your vision to life through creative storytelling and exceptional editing.'}</p>
+            <p>{profile.bio || 'Full Stack Web Developer passionate about creating innovative digital solutions and bringing ideas to life through clean, efficient code.'}</p>
           </div>
 
           <div className="footer-links">
@@ -42,8 +47,12 @@ function Footer() {
             <ul>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/about">About</Link></li>
-              <li><Link to="/projects">Projects</Link></li>
               <li><Link to="/services">Services</Link></li>
+              <li><Link to="/projects">Projects</Link></li>
+              <li><Link to="/skills">Skills</Link></li>
+              <li><Link to="/experience">Experience</Link></li>
+              <li><Link to="/education">Education</Link></li>
+              <li><Link to="/certificates">Certificates</Link></li>
               <li><Link to="/contact">Contact</Link></li>
             </ul>
           </div>
@@ -69,6 +78,9 @@ function Footer() {
           <p className="footer-text">
             &copy; {year} {profile.full_name || 'Diro Uchure'}. All rights reserved.
           </p>
+          <div className="footer-admin-link">
+            <Link to="/admin/login">🔒 Admin Portal</Link>
+          </div>
         </div>
       </div>
     </footer>

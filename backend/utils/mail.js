@@ -22,7 +22,7 @@ const getMailTo = async (db) => {
     console.warn('Could not fetch profile email for notifications:', error.message);
   }
 
-  return 'diro.uchure@gmail.com';
+  return 'dirouchure@gmail.com';
 };
 
 const createTransporter = () => {

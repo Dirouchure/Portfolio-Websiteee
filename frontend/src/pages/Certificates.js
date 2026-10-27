@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FaAward, FaCalendar, FaFilter, FaSearch } from 'react-icons/fa';
 import api, { BASE_URL } from '../config/api';
+import PageMeta from '../components/PageMeta';
+import { defaultCertificates } from '../data/defaultData';
 import './Certificates.css';
 
 function Certificates() {
-  const [certificates, setCertificates] = useState([]);
-  const [filteredCertificates, setFilteredCertificates] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
+  const [certificates, setCertificates] = useState(() => defaultCertificates);
+  const [filteredCertificates, setFilteredCertificates] = useState(() => defaultCertificates);
+  const [organizations, setOrganizations] = useState(() => [
+    ...new Set(defaultCertificates.map((c) => c.organization).filter(Boolean))
+  ]);
   const [selectedOrg, setSelectedOrg] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCert, setSelectedCert] = useState(null);
@@ -22,13 +26,14 @@ function Certificates() {
   const fetchCertificates = async () => {
     try {
       const response = await api.get('/certificates');
-      setCertificates(response.data);
-      setFilteredCertificates(response.data);
-      
-      const uniqueOrgs = [...new Set(response.data.map(c => c.organization).filter(Boolean))];
-      setOrganizations(uniqueOrgs);
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        setCertificates(response.data);
+        setFilteredCertificates(response.data);
+        const uniqueOrgs = [...new Set(response.data.map((c) => c.organization).filter(Boolean))];
+        setOrganizations(uniqueOrgs);
+      }
     } catch (error) {
-      console.error('Error fetching certificates:', error);
+      console.log('Using default certificates (backend offline or loading)');
     }
   };
 
@@ -57,6 +62,10 @@ function Certificates() {
 
   return (
     <div className="certificates">
+      <PageMeta
+        title="Certificates & Verified Credentials | Diro Uchure"
+        description="Verified software engineering certifications, professional achievements, and technical credentials of Diro Uchure."
+      />
       <div className="container">
         <h1 className="page-title">Certificates & Achievements</h1>
         
@@ -112,14 +121,19 @@ function Certificates() {
         <div className="certificates-grid">
           {filteredCertificates.map((cert) => (
             <div key={cert.id} className="certificate-card" onClick={() => setSelectedCert(cert)}>
-              {cert.certificate_image && (
-                <div className="certificate-image">
+              <div className="certificate-image">
+                {cert.certificate_image ? (
                   <img 
                     src={`${BASE_URL}/uploads/${cert.certificate_image}`} 
                     alt={cert.title} 
                   />
-                </div>
-              )}
+                ) : (
+                  <div className="certificate-placeholder-banner">
+                    <FaAward className="cert-placeholder-icon" />
+                    <span>Verified Credential</span>
+                  </div>
+                )}
+              </div>
               <div className="certificate-content">
                 <h3>{cert.title}</h3>
                 <p className="certificate-org">{cert.organization}</p>

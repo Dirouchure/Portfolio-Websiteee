@@ -134,3 +134,22 @@
     flex: 1;
   }
 }
+
+[data-theme='dark'] .service-item {
+  background: var(--card-bg, #1f2937);
+  color: var(--text-primary, #eaeaea);
+}
+
+[data-theme='dark'] .service-header h3 {
+  color: var(--text-primary, #eaeaea);
+}
+
+[data-theme='dark'] .description,
+[data-theme='dark'] .service-details span,
+[data-theme='dark'] .features {
+  color: var(--text-secondary, #a0a0a0);
+}
+
+[data-theme='dark'] .features strong {
+  color: var(--text-primary, #eaeaea);
+}

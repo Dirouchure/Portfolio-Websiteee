@@ -1,0 +1,50 @@
+.custom-cursor {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(129, 140, 248, 0.6);
+  border-radius: 50%;
+  position: fixed;
+  top: -18px;
+  left: -18px;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease, width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+  will-change: transform;
+}
+
+.custom-cursor.pointer {
+  width: 48px;
+  height: 48px;
+  top: -24px;
+  left: -24px;
+  border-color: rgba(192, 132, 252, 0.85);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.custom-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #818cf8;
+  border-radius: 50%;
+  position: fixed;
+  top: -3px;
+  left: -3px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.2s ease, transform 0.05s ease;
+  will-change: transform;
+}
+
+.custom-cursor-dot.pointer {
+  background: #c084fc;
+}
+
+/* Touch & Mobile support */
+@media (pointer: coarse), (max-width: 768px) {
+  .custom-cursor,
+  .custom-cursor-dot {
+    display: none !important;
+  }
+}

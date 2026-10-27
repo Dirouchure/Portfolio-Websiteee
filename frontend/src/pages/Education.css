@@ -1,12 +1,68 @@
+/* Modern Education Page Styling */
+
 .education {
-  padding: 4rem 0;
-  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 5rem 1.5rem 7rem;
+  background: linear-gradient(135deg, #090a10 0%, #0f1423 50%, #151930 100%);
+  position: relative;
+  overflow: hidden;
+  color: #fff;
 }
 
+.education::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  top: -150px;
+  left: -150px;
+  pointer-events: none;
+}
+
+.education-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.education-badge {
+  display: inline-block;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: #a5b4fc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.35rem 1.1rem;
+  border-radius: 30px;
+  margin-bottom: 0.75rem;
+}
+
+.education .page-title {
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.education .page-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.15rem;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Timeline */
 .education-timeline {
   position: relative;
-  max-width: 900px;
+  max-width: 950px;
   margin: 2rem auto;
+  z-index: 2;
 }
 
 .education-timeline::before {
@@ -14,16 +70,17 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
+  width: 3px;
   height: 100%;
-  background: #3498db;
+  background: linear-gradient(180deg, #6366f1 0%, #a855f7 100%);
+  border-radius: 2px;
 }
 
 .education-item {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 2.5rem;
+  margin-bottom: 3.5rem;
   position: relative;
 }
 
@@ -31,74 +88,194 @@
   content: '';
   position: absolute;
   left: 50%;
-  top: 0;
+  top: 15px;
   transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
-  background: #3498db;
-  border: 4px solid white;
+  width: 18px;
+  height: 18px;
+  background: #6366f1;
+  border: 4px solid #0f1423;
   border-radius: 50%;
-  z-index: 1;
+  z-index: 2;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
 }
 
 .education-year {
   text-align: right;
-  padding-right: 2rem;
-  font-weight: 600;
-  color: #3498db;
+  padding-right: 2.5rem;
+  font-weight: 700;
+  color: #818cf8;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.cal-icon {
   font-size: 1.1rem;
 }
 
 .education-content {
-  padding: 1.5rem;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  padding: 2.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.education-content:hover {
+  transform: translateY(-5px);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.edu-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.edu-degree-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #a5b4fc;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 12px;
 }
 
 .education-content h3 {
-  color: #2c3e50;
+  color: #fff;
   margin-bottom: 0.5rem;
+  font-size: 1.45rem;
+  font-weight: 700;
 }
 
 .education-content h4 {
-  color: #555;
+  color: #a5b4fc;
   margin-bottom: 0.5rem;
-  font-weight: normal;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.uni-icon {
+  color: #818cf8;
 }
 
 .department {
-  color: #7f8c8d;
-  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
 .description {
-  color: #555;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Coursework */
+.coursework-section {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.coursework-section h5 {
+  color: #fff;
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.coursework-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.course-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+}
+
+/* Academic Highlights */
+.academic-highlights-card {
+  max-width: 950px;
+  margin: 3rem auto 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+.academic-award-icon {
+  font-size: 3rem;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.highlight-text h3 {
+  font-size: 1.25rem;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+
+.highlight-text p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  margin: 0;
   line-height: 1.6;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .education-timeline::before {
-    left: 0;
+    left: 20px;
   }
 
   .education-item {
     grid-template-columns: 1fr;
     gap: 1rem;
+    padding-left: 45px;
   }
 
   .education-item::before {
-    left: 0;
+    left: 20px;
   }
 
   .education-year {
     text-align: left;
+    justify-content: flex-start;
     padding-right: 0;
-    padding-left: 2rem;
+    font-size: 1.1rem;
   }
 
-  .education-content {
-    margin-left: 2rem;
+  .academic-highlights-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.75rem;
   }
 }

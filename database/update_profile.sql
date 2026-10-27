@@ -9,7 +9,7 @@ UPDATE profile SET
   title = 'Professional Video Editor',
   bio = 'Creative video editor with expertise in storytelling, color grading, and motion graphics. Transforming raw footage into compelling visual narratives.',
   objective = 'Passionate about creating engaging video content that captivates audiences and delivers powerful messages through expert editing and creative vision.',
-  email = 'diro.uchure@gmail.com',
+  email = 'dirouchure@gmail.com',
   phone = '+251940672637',
   location = 'Ethiopia'
 WHERE id = 1;

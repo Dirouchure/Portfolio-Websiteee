@@ -13,20 +13,47 @@ function Messages() {
   }, []);
 
   const fetchMessages = async () => {
+    let serverMessages = [];
     try {
       const response = await api.get('/contact');
-      setMessages(response.data);
+      if (Array.isArray(response.data)) {
+        serverMessages = response.data;
+      }
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.warn('Backend contact messages unreachable, checking local sync:', error);
+    }
+
+    try {
+      const localStored = JSON.parse(localStorage.getItem('portfolio_contact_messages') || '[]');
+      const combined = [...serverMessages];
+      for (const item of localStored) {
+        if (!combined.some(m => (m.name === item.name && m.email === item.email && m.message === item.message) || m.id === item.id)) {
+          combined.push(item);
+        }
+      }
+      combined.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+      setMessages(combined);
+    } catch (e) {
+      setMessages(serverMessages);
     }
   };
 
   const handleMarkAsRead = async (id) => {
     try {
       await api.put(`/contact/${id}/read`);
-      fetchMessages();
     } catch (error) {
-      console.error('Error marking message as read:', error);
+      console.error('Error marking message as read on server:', error);
+    }
+
+    try {
+      const localStored = JSON.parse(localStorage.getItem('portfolio_contact_messages') || '[]');
+      const updated = localStored.map(m => m.id === id ? { ...m, is_read: true } : m);
+      localStorage.setItem('portfolio_contact_messages', JSON.stringify(updated));
+    } catch (e) {}
+
+    setMessages(prev => prev.map(m => m.id === id ? { ...m, is_read: true } : m));
+    if (selectedMessage && selectedMessage.id === id) {
+      setSelectedMessage(prev => ({ ...prev, is_read: true }));
     }
   };
 
@@ -34,13 +61,20 @@ function Messages() {
     if (window.confirm('Are you sure you want to delete this message?')) {
       try {
         await api.delete(`/contact/${id}`);
-        setNotification('Message deleted successfully');
-        fetchMessages();
-        setSelectedMessage(null);
-        setTimeout(() => setNotification(''), 3000);
       } catch (error) {
-        setNotification('Error deleting message');
+        console.error('Error deleting message on server:', error);
       }
+
+      try {
+        const localStored = JSON.parse(localStorage.getItem('portfolio_contact_messages') || '[]');
+        const filtered = localStored.filter(m => m.id !== id);
+        localStorage.setItem('portfolio_contact_messages', JSON.stringify(filtered));
+      } catch (e) {}
+
+      setNotification('Message deleted successfully');
+      setMessages(prev => prev.filter(m => m.id !== id));
+      setSelectedMessage(null);
+      setTimeout(() => setNotification(''), 3000);
     }
   };
 

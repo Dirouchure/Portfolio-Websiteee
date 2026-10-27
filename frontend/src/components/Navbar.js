@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { FaCode, FaBars, FaTimes } from 'react-icons/fa';
 import api from '../config/api';
 import './Navbar.css';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [siteName, setSiteName] = useState('Diro Uchure');
+  const [scrolled, setScrolled] = useState(false);
+  const [siteName, setSiteName] = useState(() => {
+    try {
+      const cached = localStorage.getItem('portfolio_profile');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.full_name) return parsed.full_name;
+      }
+    } catch {
+      // ignore
+    }
+    return 'Diro Uchure';
+  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     api.get('/profile')
@@ -26,47 +47,67 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
         <Link to="/" className="nav-logo" onClick={closeMenu}>
-          {siteName}
-        </Link>
-        
-        <div className="menu-icon" onClick={toggleMenu}>
-          <div className={isOpen ? 'hamburger active' : 'hamburger'}>
-            <span></span>
-            <span></span>
-            <span></span>
+          <div className="logo-badge">
+            <FaCode />
           </div>
+          <div className="logo-text-group">
+            <span className="logo-title">{siteName}</span>
+            <span className="logo-subtitle">Full Stack Dev</span>
+          </div>
+        </Link>
+
+        <div className="menu-icon" onClick={toggleMenu} aria-label="Toggle navigation">
+          {isOpen ? <FaTimes /> : <FaBars />}
         </div>
 
         <ul className={isOpen ? 'nav-menu active' : 'nav-menu'}>
           <li className="nav-item">
-            <Link to="/" className="nav-link" onClick={closeMenu}>Home</Link>
+            <NavLink to="/" end className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Home
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/about" className="nav-link" onClick={closeMenu}>About</Link>
+            <NavLink to="/about" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              About
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/skills" className="nav-link" onClick={closeMenu}>Skills</Link>
+            <NavLink to="/services" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Services
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/education" className="nav-link" onClick={closeMenu}>Education</Link>
+            <NavLink to="/projects" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Projects
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/experience" className="nav-link" onClick={closeMenu}>Experience</Link>
+            <NavLink to="/skills" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Skills
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/projects" className="nav-link" onClick={closeMenu}>Projects</Link>
+            <NavLink to="/experience" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Experience
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/certificates" className="nav-link" onClick={closeMenu}>Certificates</Link>
+            <NavLink to="/education" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Education
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/services" className="nav-link" onClick={closeMenu}>Services</Link>
+            <NavLink to="/certificates" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Certificates
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/contact" className="nav-link" onClick={closeMenu}>Contact</Link>
+            <NavLink to="/contact" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMenu}>
+              Contact
+            </NavLink>
           </li>
         </ul>
       </div>

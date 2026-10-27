@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { FaGithub, FaExternalLinkAlt, FaFilter, FaSearch, FaTimes, FaCalendar, FaUsers, FaClock, FaEye, FaStar, FaCheckCircle, FaSpinner, FaLightbulb } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaFilter, FaSearch, FaTimes, FaCalendar, FaUsers, FaClock, FaEye, FaStar, FaCheckCircle, FaSpinner, FaLightbulb, FaCode } from 'react-icons/fa';
 import api, { BASE_URL } from '../config/api';
+import PageMeta from '../components/PageMeta';
+import { defaultProjects } from '../data/defaultData';
 import './Projects.css';
 
 function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [projects, setProjects] = useState(() => {
+    // Only show deployed projects initially
+    return defaultProjects.filter(p => p.live_url || p.project_url);
+  });
+  const [filteredProjects, setFilteredProjects] = useState(() => {
+    return defaultProjects.filter(p => p.live_url || p.project_url);
+  });
+  const [categories, setCategories] = useState(() => {
+    const deployed = defaultProjects.filter(p => p.live_url || p.project_url);
+    return [...new Set(deployed.map((p) => p.category).filter(Boolean))];
+  });
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);
@@ -23,13 +33,20 @@ function Projects() {
   const fetchProjects = async () => {
     try {
       const response = await api.get('/projects');
-      setProjects(response.data);
-      
-      const uniqueCategories = [...new Set(response.data.map(p => p.category).filter(Boolean))];
-      setCategories(uniqueCategories);
-      setFilteredProjects(response.data);
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        // Filter to only show deployed projects (with live_url or project_url)
+        const deployedProjects = response.data.filter(p => p.live_url || p.project_url);
+        setProjects(deployedProjects);
+        const uniqueCategories = [...new Set(deployedProjects.map((p) => p.category).filter(Boolean))];
+        setCategories(uniqueCategories);
+        setFilteredProjects(deployedProjects);
+      }
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.log('Using default projects (backend offline or loading)');
+      // Also filter default projects to only show deployed ones
+      const deployedDefaults = defaultProjects.filter(p => p.live_url || p.project_url);
+      setProjects(deployedDefaults);
+      setFilteredProjects(deployedDefaults);
     }
   };
 
@@ -90,6 +107,10 @@ function Projects() {
 
   return (
     <div className="projects">
+      <PageMeta
+        title="Portfolio Projects & Engineering Work | Diro Uchure"
+        description="Explore production web applications, open source systems, full-stack architectures, and frontend projects by Diro Uchure."
+      />
       <div className="container">
         <h1 className="page-title">My Projects</h1>
         
@@ -140,17 +161,23 @@ function Projects() {
             <div className="projects-grid">
               {featuredProjects.map((project) => (
                 <div key={project.id} className="project-card featured" onClick={() => handleViewDetails(project)}>
-                  {project.image && (
-                    <div className="project-image">
+                  <div className="project-image">
+                    <span className="status-badge">🚀 DEPLOYED</span>
+                    {project.image ? (
                       <img 
                         src={`${BASE_URL}/uploads/${project.image}`} 
                         alt={project.title} 
                       />
-                      <div className="project-overlay">
-                        <span className="view-details">View Details</span>
+                    ) : (
+                      <div className="project-image-placeholder">
+                        <FaCode className="placeholder-code-icon" />
+                        <span>{project.category || 'Web Application'}</span>
                       </div>
+                    )}
+                    <div className="project-overlay">
+                      <span className="view-details">View Details</span>
                     </div>
-                  )}
+                  </div>
                   <div className="project-content">
                     <div className="project-header">
                       <h3>{project.title}</h3>
@@ -198,17 +225,23 @@ function Projects() {
             <div className="projects-grid">
               {regularProjects.map((project) => (
                 <div key={project.id} className="project-card" onClick={() => handleViewDetails(project)}>
-                  {project.image && (
-                    <div className="project-image">
+                  <div className="project-image">
+                    <span className="status-badge">🚀 DEPLOYED</span>
+                    {project.image ? (
                       <img 
                         src={`${BASE_URL}/uploads/${project.image}`} 
                         alt={project.title} 
                       />
-                      <div className="project-overlay">
-                        <span className="view-details">View Details</span>
+                    ) : (
+                      <div className="project-image-placeholder">
+                        <FaCode className="placeholder-code-icon" />
+                        <span>{project.category || 'Web Application'}</span>
                       </div>
+                    )}
+                    <div className="project-overlay">
+                      <span className="view-details">View Details</span>
                     </div>
-                  )}
+                  </div>
                   <div className="project-content">
                     <h3>{project.title}</h3>
                     {project.category && <span className="project-category">{project.category}</span>}

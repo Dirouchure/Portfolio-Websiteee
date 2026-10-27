@@ -14,6 +14,5 @@ root.render(
   </React.StrictMode>
 );
 
-if (process.env.NODE_ENV === 'production') {
-  serviceWorkerRegistration.register();
-}
+// Unregister service worker so browser loads new deployments immediately without stale cache
+serviceWorkerRegistration.unregister();

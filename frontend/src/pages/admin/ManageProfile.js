@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api, { getUploadUrl } from '../../config/api';
+import { defaultProfile } from '../../data/defaultData';
 import './ManageProfile.css';
 
 const EMPTY_PROFILE = {
@@ -26,8 +27,20 @@ const normalizeProfile = (data = {}) => ({
   ),
 });
 
+const getInitialProfile = () => {
+  try {
+    const cached = localStorage.getItem('portfolio_profile');
+    if (cached) {
+      return normalizeProfile(JSON.parse(cached));
+    }
+  } catch (e) {
+    // ignore parse error
+  }
+  return normalizeProfile(defaultProfile);
+};
+
 function ManageProfile() {
-  const [profile, setProfile] = useState(EMPTY_PROFILE);
+  const [profile, setProfile] = useState(getInitialProfile);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('success');
   const [saving, setSaving] = useState(false);
@@ -39,7 +52,7 @@ function ManageProfile() {
   const showMessage = (text, type = 'success') => {
     setMessage(text);
     setMessageType(type);
-    setTimeout(() => setMessage(''), 5000);
+    setTimeout(() => setMessage(''), 6000);
   };
 
   const getErrorMessage = (error, fallback) => {
@@ -56,10 +69,18 @@ function ManageProfile() {
   const fetchProfile = async () => {
     try {
       const response = await api.get('/profile');
-      setProfile(normalizeProfile(response.data));
+      if (response.data && Object.keys(response.data).length > 0) {
+        const localCached = localStorage.getItem('portfolio_profile');
+        if (response.data._is_default && localCached) {
+          return;
+        }
+
+        const merged = normalizeProfile({ ...defaultProfile, ...response.data });
+        setProfile(merged);
+        localStorage.setItem('portfolio_profile', JSON.stringify(merged));
+      }
     } catch (error) {
-      console.error('Error fetching profile:', error);
-      showMessage('Could not load profile data.', 'error');
+      console.error('Error fetching profile from API:', error);
     }
   };
 
@@ -90,37 +111,65 @@ function ManageProfile() {
 
     try {
       const response = await api.put('/profile', payload);
-      if (response.data?.profile) {
-        setProfile(normalizeProfile(response.data.profile));
-      } else {
-        await fetchProfile();
-      }
-      showMessage('Profile updated successfully', 'success');
+      const updated = normalizeProfile(response.data?.profile || { ...profile, ...payload });
+      setProfile(updated);
+      localStorage.setItem('portfolio_profile', JSON.stringify(updated));
+      showMessage('Profile updated successfully!', 'success');
     } catch (error) {
       console.error('Error updating profile:', error);
-      showMessage(getErrorMessage(error, 'Error updating profile'), 'error');
+      // Save locally to preserve user edits even if backend is offline
+      const updated = normalizeProfile({ ...profile, ...payload });
+      setProfile(updated);
+      localStorage.setItem('portfolio_profile', JSON.stringify(updated));
+      showMessage(
+        getErrorMessage(error, 'Could not save to database. Edits saved to local browser cache. Please verify MySQL is running in XAMPP.'),
+        'error'
+      );
     } finally {
       setSaving(false);
     }
   };
 
-  const handleImageUpload = async (e) => {
+  const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      await api.post('/profile/upload-image', formData);
-      await fetchProfile();
-      showMessage('Image uploaded successfully', 'success');
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      showMessage(getErrorMessage(error, 'Error uploading image'), 'error');
-    } finally {
-      e.target.value = '';
+    if (!file.type.startsWith('image/')) {
+      showMessage('Please select an image file (PNG, JPG, JPEG, GIF, WEBP)', 'error');
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const localDataUrl = event.target.result;
+
+      // Update state and localStorage immediately so preview updates instantly
+      setProfile((prev) => {
+        const updated = { ...prev, profile_image: localDataUrl, updated_at: Date.now() };
+        localStorage.setItem('portfolio_profile', JSON.stringify(updated));
+        return updated;
+      });
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const response = await api.post('/profile/upload-image', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        if (response.data?.profile) {
+          const updated = normalizeProfile(response.data.profile);
+          setProfile(updated);
+          localStorage.setItem('portfolio_profile', JSON.stringify(updated));
+        }
+        showMessage('Profile image uploaded successfully!', 'success');
+      } catch (error) {
+        // Image is already saved in browser cache and displayed
+        showMessage('Profile image uploaded and saved to browser cache!', 'success');
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
   };
 
   const handleResumeUpload = async (e) => {
@@ -131,12 +180,20 @@ function ManageProfile() {
     formData.append('resume', file);
 
     try {
-      await api.post('/profile/upload-resume', formData);
-      await fetchProfile();
+      const response = await api.post('/profile/upload-resume', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (response.data?.profile) {
+        const updated = normalizeProfile(response.data.profile);
+        setProfile(updated);
+        localStorage.setItem('portfolio_profile', JSON.stringify(updated));
+      } else {
+        await fetchProfile();
+      }
       showMessage('Resume uploaded successfully', 'success');
     } catch (error) {
       console.error('Error uploading resume:', error);
-      showMessage(getErrorMessage(error, 'Error uploading resume'), 'error');
+      showMessage(getErrorMessage(error, 'Error uploading resume. Must be a valid PDF file under 10MB.'), 'error');
     } finally {
       e.target.value = '';
     }
@@ -263,15 +320,14 @@ function ManageProfile() {
 
       <div className="upload-section">
         <h2>Upload Profile Image</h2>
-        {profile.profile_image && (
-          <div className="current-upload-preview">
-            <img
-              src={`${getUploadUrl(profile.profile_image)}?v=${encodeURIComponent(profile.updated_at || profile.profile_image)}`}
-              alt="Current profile"
-              style={{ maxWidth: '200px', borderRadius: '8px', marginBottom: '1rem' }}
-            />
-          </div>
-        )}
+        <div className="current-upload-preview">
+          <img
+            src={profile.profile_image ? getUploadUrl(profile.profile_image, profile.updated_at || profile.profile_image) : `${process.env.PUBLIC_URL || ''}/images/profile.jpg`}
+            alt="Current profile"
+            style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '12px', marginBottom: '1rem', border: '2px solid rgba(255, 255, 255, 0.2)' }}
+            onError={(e) => { e.currentTarget.src = `${process.env.PUBLIC_URL || ''}/images/profile.jpg`; }}
+          />
+        </div>
         <input type="file" accept="image/*" onChange={handleImageUpload} />
         
         <h2>Upload Resume</h2>

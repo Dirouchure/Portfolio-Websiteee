@@ -38,16 +38,19 @@ function ManageSkills() {
     try {
       if (editId) {
         await api.put(`/skills/${editId}`, formData);
-        setMessage('Skill updated successfully');
+        setMessage('✓ Skill updated successfully');
       } else {
         await api.post('/skills', formData);
-        setMessage('Skill added successfully');
+        setMessage('✓ Skill added successfully');
       }
       fetchSkills();
       resetForm();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error saving skill');
+      console.error('Error saving skill:', error);
+      const errorMsg = error.response?.data?.message || error.message || 'Error saving skill';
+      setMessage(`✗ Error: ${errorMsg}`);
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
@@ -64,11 +67,14 @@ function ManageSkills() {
     if (window.confirm('Are you sure you want to delete this skill?')) {
       try {
         await api.delete(`/skills/${id}`);
-        setMessage('Skill deleted successfully');
+        setMessage('✓ Skill deleted successfully');
         fetchSkills();
         setTimeout(() => setMessage(''), 3000);
       } catch (error) {
-        setMessage('Error deleting skill');
+        console.error('Error deleting skill:', error);
+        const errorMsg = error.response?.data?.message || error.message || 'Error deleting skill';
+        setMessage(`✗ Error: ${errorMsg}`);
+        setTimeout(() => setMessage(''), 5000);
       }
     }
   };

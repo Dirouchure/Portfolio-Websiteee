@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FaEdit, FaTrash, FaPlus, FaVideo, FaPalette, FaMagic, FaMusic } from 'react-icons/fa';
 import api from '../../config/api';
 import './ManageServices.css';
@@ -104,9 +105,12 @@ function ManageServices() {
     <div className="manage-services">
       <div className="page-header">
         <h1>Manage Services</h1>
-        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
-          <FaPlus /> {showForm ? 'Cancel' : 'Add Service'}
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <Link to="/admin/dashboard" className="btn btn-secondary">Back to Dashboard</Link>
+          <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+            <FaPlus /> {showForm ? 'Cancel' : 'Add Service'}
+          </button>
+        </div>
       </div>
 
       {showForm && (
